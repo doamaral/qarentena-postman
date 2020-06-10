@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "38c1a43a-cd4b-44be-8086-ff31b2c91a3c",
+		"name": "QArentena",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuários",
+			"item": [
+				{
+					"name": "Listar usuários cadastrados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Produtos",
+			"item": [
+				{
+					"name": "Retorna Produtos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "939a8837-de07-41aa-9641-4ea069456592",
+								"exec": [
+									"//Testes no Header\r",
+									"//Criado com Snippet do Postman\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    console.log(\"Hello\");\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//De agora em diante vamos escrever tudo\r",
+									"pm.test(\"testa se reason é 'OK'\", function(){\r",
+									"    //pm.response.to.be.ok;\r",
+									"    pm.expect(pm.response.reason()).to.equal(\"OK\");\r",
+									"});\r",
+									"pm.test(\"content type deve ser application/json\", function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"pm.test(\"testa se possui a chave content type\", function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"//Teste no Body\r",
+									"pm.test(\"deveria retornar um body\", function(){\r",
+									"    pm.expect(pm.response.json()).to.not.be.undefined;\r",
+									"});\r",
+									"pm.test(\"verificar atributo de totalização\", function(){\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.produtos.length).to.equal(responseJson.quantidade);\r",
+									"});\r",
+									"pm.test(\"se existe um produto com o calor \", function(){\r",
+									"    pm.expect(pm.response.text()).to.includes(\"Logitech MX Vertical\")\r",
+									"});\r",
+									"pm.test(\"testa se todos os produtos tem preco\", function(){\r",
+									"    _.forEach(pm.response.json().produtos, function(produto){\r",
+									"        pm.expect(produto.preco).to.not.be.null;\r",
+									"    });\r",
+									"});\r",
+									"pm.test(\"produto aleatório deve ter nome _.sample\", function(){\r",
+									"    pm.expect(_.sample(pm.response.json().produtos).nome).to.not.be.undefined;\r",
+									"});\r",
+									"pm.test(\"produto aleatório deve ter nome _.random\", function(){\r",
+									"    //Arrange\r",
+									"    const responseJson = pm.response.json().produtos;\r",
+									"    \r",
+									"    //Act\r",
+									"    const randomIndex = _.random(0, responseJson.length-1);\r",
+									"\r",
+									"    //Assert\r",
+									"    pm.expect(responseJson[randomIndex].nome).to.not.be.undefined;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/produtos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retorna Produto por id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f0e5a934-fc8b-404a-b6f7-6fe514e5cdec",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/produtos?_id=o3OTnQ3BTN41IpP4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"produtos"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "o3OTnQ3BTN41IpP4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar produto",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8d49731e-b525-42da-b8fd-82e393b2e7e1",
+								"exec": [
+									"const prefixo = pm.collectionVariables.get(\"listaPrefixo\");\r",
+									"const suffix = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);\r",
+									"const baseName = _.sample(prefixo.split(\",\"))\r",
+									"\r",
+									"pm.collectionVariables.set(\"nomeProduto\", baseName + \" \" + suffix);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nomeProduto}}\",\r\n  \"preco\": \"470\",\r\n  \"descricao\": \"Mouse bom\",\r\n  \"quantidade\": \"5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/produtos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Carrinhos",
+			"item": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Autenticação",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"fulano@qa.com\",\r\n  \"password\": \"teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "98dca21f-7c2d-4084-9782-c845d6d3984b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "45abaaab-4a95-482d-8d8a-b7bb2b33726c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "9e5b2b39-9cd2-4a5f-8465-f4e435feb5cd",
+			"key": "listaPrefixo",
+			"value": "Mouse,Teclado,Pendrive,Monitor,PC,Laptop",
+			"type": "string"
+		},
+		{
+			"id": "b6da3982-4549-4d14-bcb8-e87e7bbd0e6b",
+			"key": "nomeProduto",
+			"value": "Pendrive lcuej1l6nueazfenrtrokq",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
