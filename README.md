@@ -8,4 +8,5 @@
 - [Linkedin](https://www.linkedin.com/in/lopesdoamaral/)
 
 [![ServeRest API](https://img.shields.io/badge/API-ServeRest-green?style=for-the-badge)](https://serverest.js.org/)
+- Execute o comando 
     - `$ npx serverest -p 3500 -t 3600 --nobearer`
