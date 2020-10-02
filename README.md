@@ -7,5 +7,5 @@
 
 - [Linkedin](https://www.linkedin.com/in/lopesdoamaral/)
 
-- [ServeRest](https://www.npmjs.com/package/serverest)
+[![ServeRest API](https://img.shields.io/badge/API-ServeRest-green?style=for-the-badge)](https://serverest.js.org/)
     - `$ npx serverest -p 3500 -t 3600 --nobearer`
